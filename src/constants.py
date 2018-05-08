@@ -1,0 +1,7 @@
+
+DISPLAY_W = 800
+DISPLAY_H = 600
+
+TILE_SIZE = 32
+
+FPS = 60
