@@ -22,6 +22,12 @@ class BaseMap(object):
         else:
             return filter(lambda x: self.get_tile(x) == tile_id, self.all_points)
 
+    def get_all_but(self, tile_id):
+        if isinstance(tile_id, set):
+            return filter(lambda x: self.get_tile(x) not in tile_id, self.all_points)
+        else:
+            return filter(lambda x: self.get_tile(x) != tile_id, self.all_points)
+
     def set_tile(self, (x, y), value):
         self.array[x][y] = value
 

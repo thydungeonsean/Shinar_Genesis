@@ -1,9 +1,10 @@
 from random import randint
 
-desert = (190, 200, 50)
+desert = (220, 210, 50)
 plains = (140, 75, 60)
 fertile = (10, 180, 90)
 river = (0, 210, 240)
+farm = (50, 250, 100)
 
 
 def fluctuate_river():

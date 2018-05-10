@@ -28,3 +28,11 @@ class Vector(object):
 
     def divide(self, d):
         self.set_position(self.x / d, self.y / d)
+
+    @property
+    def position(self):
+        return self.x, self.y
+
+    @property
+    def int_position(self):
+        return int(self.x), int(self.y)
