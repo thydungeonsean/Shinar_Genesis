@@ -2,10 +2,24 @@
 
 class Vector(object):
 
-    def __init__(self):
+    def __init__(self, *args):
 
         self.x = 0.0
         self.y = 0.0
+
+        self.set_initial_value(*args)
+
+    def set_initial_value(self, *args):
+        if args:
+
+            if len(args) > 2:
+                raise Exception("not valid parameter for vector")
+            elif len(args) == 2:
+                self.x = float(args[0])
+                self.y = float(args[1])
+            elif len(args) == 1:
+                self.x = float(args[0][0])
+                self.y = float(args[0][1])
 
     def set_position(self, x, y):
         self.x = float(x)

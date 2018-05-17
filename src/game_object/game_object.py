@@ -9,8 +9,7 @@ class GameObject(object):
 
         self.obj_code = obj_code
         self.state = state
-        self.coord = Vector()
-        self.coord.set_from_tuple(coord)
+        self.coord = Vector(coord)
         self.pixel_coord = Vector()
         self.image = None
 

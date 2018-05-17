@@ -5,11 +5,11 @@ class StateManager(object):
 
     def __init__(self, initial):
 
+        Display.get_instance()
         self.current_state = initial(self)
         self.next_state = None
 
     def initialize(self):
-        Display.get_instance()
         self.current_state.initialize()
 
     @property

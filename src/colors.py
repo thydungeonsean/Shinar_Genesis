@@ -6,6 +6,8 @@ fertile = (10, 180, 90)
 river = (0, 210, 240)
 farm = (50, 250, 100)
 
+BLACK = (0, 0, 0)
+
 
 def fluctuate_river():
 

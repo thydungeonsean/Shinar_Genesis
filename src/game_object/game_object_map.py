@@ -19,7 +19,6 @@ class GameObjectMap(object):
         map(lambda x: x.run(), self.game_objects)
 
     def get_at(self, point):
-
         return filter(lambda x: x.coord.int_position == point, self.game_objects)
 
     def occupied(self):

@@ -19,6 +19,10 @@ class ScenarioGenerator(object):
     def game_object_map(self):
         return self.state.map.game_object_map
 
+    @property
+    def dominion_map(self):
+        return self.state.map.dominion_map
+
     def populate(self):
         self.place_palaces()
         self.place_villages()
@@ -29,7 +33,7 @@ class ScenarioGenerator(object):
         valid = self.tile_map.get_all_but(RIVER)
         valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
 
-        p1 = self.state.players[0]
+        p1 = self.state.player_manager.players[0]
         p = Palace(self.state, choice(valid), p1)
         self.game_object_map.add_game_object(p)
 
@@ -47,6 +51,6 @@ class ScenarioGenerator(object):
     def initiate_dominion(self):
 
         palaces = self.game_object_map.get_objects_with_code(PALACE)
-        coords = [x.coord.int_position for x in palaces]
-        print coords
+        for p in palaces:
+            self.dominion_map.add_dominion(p.owner_id, p.coord.int_position)
 

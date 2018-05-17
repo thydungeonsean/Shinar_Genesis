@@ -11,6 +11,7 @@ class InputHandler(object):
     def __init__(self, state, *listeners):
 
         self.state = state
+        self.ui = state.ui
 
         self.click_handler = ClickHandler(state)
         self.listeners = []
@@ -32,6 +33,7 @@ class InputHandler(object):
             elif event.type == MOUSEBUTTONDOWN:
                 if event.button == InputHandler.LEFT_BUTTON:
                     self.click_handler.click()
+                    self.ui.click(pygame.mouse.get_pos())
 
             elif event.type == MOUSEBUTTONUP:
                 pass

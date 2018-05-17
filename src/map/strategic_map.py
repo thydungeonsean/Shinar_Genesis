@@ -7,9 +7,6 @@ from src.image.map_image import MapImage
 from src.game_object.game_object_map import GameObjectMap
 from src.game_object.scenario_generator import ScenarioGenerator
 
-from random import sample
-from src.enum.terrain import *
-
 
 class StrategicMap(object):
 
