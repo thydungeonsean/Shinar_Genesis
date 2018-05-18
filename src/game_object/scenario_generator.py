@@ -2,6 +2,7 @@ from src.enum.terrain import *
 from random import *
 from village import Village
 from palace import Palace
+from granary import Granary
 from src.enum.object_codes import *
 
 
@@ -25,17 +26,18 @@ class ScenarioGenerator(object):
 
     def populate(self):
         self.place_palaces()
+        self.place_granaries()
         self.place_villages()
         self.initiate_dominion()
 
     def place_palaces(self):
 
-        valid = self.tile_map.get_all_but(RIVER)
-        valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
+        for player in self.state.player_manager.players:
+            valid = self.tile_map.get_all_but(RIVER)
+            valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
 
-        p1 = self.state.player_manager.players[0]
-        p = Palace(self.state, choice(valid), p1)
-        self.game_object_map.add_game_object(p)
+            p = Palace(self.state, choice(valid), player)
+            self.game_object_map.add_game_object(p)
 
     def place_villages(self):
 
@@ -53,4 +55,14 @@ class ScenarioGenerator(object):
         palaces = self.game_object_map.get_objects_with_code(PALACE)
         for p in palaces:
             self.dominion_map.add_dominion(p.owner_id, p.coord.int_position)
+
+    def place_granaries(self):
+
+        for player in self.state.player_manager.players:
+
+            valid = self.tile_map.get_all({FERTILE, PLAINS})
+            valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
+
+            g = Granary(self.state, choice(valid), player)
+            self.game_object_map.add_game_object(g)
 

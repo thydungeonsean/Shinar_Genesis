@@ -29,7 +29,13 @@ class UI(object):
         self.elements[element.element_id] = element
 
     def remove_element(self, element):
+        element.strand_element()
         del self.elements[element.element_id]
+
+    def remove_element_by_key(self, el_id):
+        element = self.get_element(el_id)
+        element.strand_element()
+        del self.elements[el_id]
 
     def get_element(self, key):
         return self.elements[key]

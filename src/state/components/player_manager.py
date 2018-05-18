@@ -18,3 +18,8 @@ class PlayerManager(object):
     @property
     def active_player(self):
         return self.players[0]
+
+    def cycle_to_next_player(self):
+
+        self.players.append(self.active_player)
+        del self.players[0]

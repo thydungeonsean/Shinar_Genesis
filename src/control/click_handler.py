@@ -13,7 +13,8 @@ class ClickHandler(object):
         point = pygame.mouse.get_pos()
 
         if self.point_over_strategy_map(point):
-            print self.get_map_coord(point)
+            if self.state.action_controller.action_ready:
+                self.state.action_controller.action.perform_action(self.get_map_coord(point))
 
     def point_over_strategy_map(self, point):
         return True

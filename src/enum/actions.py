@@ -1,0 +1,17 @@
+
+
+PLANT_ACTION = 0
+HARVEST_ACTION = 1
+MOVE_ACTION = 2
+RAISE_ACTION = 3
+BATTLE_ACTION = 4
+
+action_names = {
+    PLANT_ACTION: "Plant",
+    HARVEST_ACTION: "Harvest",
+    RAISE_ACTION: "Raise",
+    MOVE_ACTION: "Move",
+    BATTLE_ACTION: "Battle",
+}
+
+test_actions = [PLANT_ACTION, HARVEST_ACTION, RAISE_ACTION, MOVE_ACTION]

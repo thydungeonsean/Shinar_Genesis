@@ -28,6 +28,9 @@ class Element(object):
     def add_child(self, child):
         self.sub_elements.append(child)
 
+    def remove_child(self, child):
+        self.sub_elements.remove(child)
+
     def set_parent(self, parent):
 
         if parent is None:
@@ -39,6 +42,11 @@ class Element(object):
             p = self.ui.get_element(parent)
             p.add_child(self)
             return p
+
+    def strand_element(self):
+
+        if self.parent is not None:
+            self.parent.remove_child(self)
 
     def click(self, point):
 
@@ -93,6 +101,7 @@ class Element(object):
         if name in self.named_components:
             self.remove_component(self.get_named_component(name))
         self.named_components[name] = component
+        self.add_component(component)
 
     def remove_named_component(self, name):
         self.remove_component(self.get_named_component(name))

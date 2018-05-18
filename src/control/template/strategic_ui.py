@@ -12,7 +12,7 @@ def load_strategic_ui(state):
     base_screen = Element(s_ui, DISPLAY_W, DISPLAY_H, el_id='screen')
     s_ui.add_element(base_screen)
 
-    e1 = PlayerBanner(s_ui, '1')
-    s_ui.add_element(e1)
+    # e1 = PlayerBanner(s_ui, '1')
+    # s_ui.add_element(e1)
 
     return s_ui

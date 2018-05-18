@@ -7,6 +7,8 @@ river = (0, 210, 240)
 farm = (50, 250, 100)
 
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+HIGHLIGHT = (200, 200, 0)
 
 
 def fluctuate_river():
