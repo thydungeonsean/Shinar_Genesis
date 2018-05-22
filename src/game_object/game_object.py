@@ -8,6 +8,7 @@ class GameObject(object):
     def __init__(self, state, coord, obj_code):
 
         self.obj_code = obj_code
+        self.owner_id = None
         self.state = state
         self.coord = Vector(coord)
         self.pixel_coord = Vector()

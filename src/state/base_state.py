@@ -43,6 +43,9 @@ class BaseState(object):
     def delay_frame(self):
 
         self.clock.tick(FPS)
+        # f = self.clock.get_fps()
+        # if f < 59:
+        #     print f
 
     def quit(self):
         self.state_manager.next_state = None

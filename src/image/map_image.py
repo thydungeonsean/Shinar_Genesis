@@ -2,15 +2,11 @@ import pygame
 from src.constants import *
 from src.colors import *
 from src.enum.terrain import *
-from random import randint
 
 
 class MapImage(object):
 
     WATER_SPEED = 30
-
-    num_farm_patterns = 3
-    farm_patterns = []
 
     def __init__(self, parent_map, tile_map):
 
@@ -20,18 +16,20 @@ class MapImage(object):
         self.image = None
         self.river_colors = {}
 
-        self.generate_farm_patterns()
+        self.farm_image = self.create_farm_image()
 
     def initialize(self):
+        self.create_map_image()
         self.render_map()
 
-    def render_map(self):
+    def create_map_image(self):
 
         w = self.tile_map.w * TILE_SIZE
         h = self.tile_map.h * TILE_SIZE
 
         self.image = pygame.Surface((w, h)).convert()
 
+    def render_map(self):
         self.fluctuate_river_colors()
 
         for point in self.tile_map.all_points:
@@ -58,7 +56,7 @@ class MapImage(object):
 
     def fluctuate_river_colors(self):
 
-        for point in self.tile_map.get_all({RIVER, DESERT}):
+        for point in self.tile_map.get_all({RIVER}):
             self.river_colors[point] = fluctuate_river()
 
     def draw(self, surface):
@@ -75,16 +73,15 @@ class MapImage(object):
         px = x * TILE_SIZE
         py = y * TILE_SIZE
 
-        for sx, sy in MapImage.farm_patterns[self.farm_map.farms[(x, y)]]:
-            pygame.draw.line(self.image, farm, (px+sx, py+sy), (px+sx, py+sy+randint(2, 3)))
+        self.image.blit(self.farm_image, (px, py))
 
-    def generate_farm_patterns(self):
+    def create_farm_image(self):
 
-        for i in range(MapImage.num_farm_patterns):
-            pattern = []
-            for i in range(randint(30, 50)):
-                sx = randint(0, TILE_SIZE)
-                sy = randint(0, TILE_SIZE)
-                pattern.append((sx, sy))
+        img = pygame.image.load('assets/farm.png').convert()
+        img.set_colorkey(WHITE)
+        return img
 
-            MapImage.farm_patterns.append(pattern)
+    def update(self, tiles):
+
+        for tile in tiles:
+            self.render_tile(tile)

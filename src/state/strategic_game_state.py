@@ -25,7 +25,7 @@ class StrategicGameState(BaseState):
         self.screen = None
 
         self.map = StrategicMap(self)
-        self.player_manager = PlayerManager(self, Player('Player 1', (200, 0, 0)), Player('Player 2', (0, 200, 0)))
+        self.player_manager = PlayerManager(self, Player('Player 1', (200, 0, 0)), Player('Player 2', (0, 0, 200)))
         self.turn_controller = TurnController(self)
         self.map_highlighter = MapHighlighter(self)
 

@@ -56,7 +56,7 @@ class Element(object):
                 el.click(point)
 
     def on_click(self):
-        print self.element_id
+        pass
 
     def point_is_over(self, (x, y)):
 

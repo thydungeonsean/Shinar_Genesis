@@ -1,11 +1,11 @@
-from river_generator import RiverGenerator
-from moisture_map import MoistureMap
-from tile_map import TileMap
-from farm_map import FarmMap
 from dominion_map import DominionMap
-from src.image.map_image import MapImage
+from farm_map import FarmMap
+from moisture_map import MoistureMap
+from river_generator import RiverGenerator
 from src.game_object.game_object_map import GameObjectMap
-from src.game_object.scenario_generator import ScenarioGenerator
+from src.image.map_image import MapImage
+from src.map.scenario_generation.scenario_generator import ScenarioGenerator
+from tile_map import TileMap
 
 
 class StrategicMap(object):
@@ -26,7 +26,7 @@ class StrategicMap(object):
         self.river = RiverGenerator(self).generate_river()
         self.moisture_map = MoistureMap(self.w, self.h, self.river)
         self.tile_map = TileMap(self.w, self.h, self.moisture_map)
-        self.farm_map = FarmMap()
+        self.farm_map = FarmMap(self)
         self.map_image = MapImage(self, self.tile_map)
 
         self.game_object_map = GameObjectMap(self.state, self.tile_map)
@@ -48,5 +48,7 @@ class StrategicMap(object):
         self.dominion_map.draw(surface)
 
     def run(self):
+        self.dominion_map.run()
+        self.farm_map.run()
         self.map_image.run()
         self.game_object_map.run()

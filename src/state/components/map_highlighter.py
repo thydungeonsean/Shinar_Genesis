@@ -13,7 +13,7 @@ class MapHighlighter(object):
 
         self.highlight_surf = pygame.Surface((TILE_SIZE, TILE_SIZE)).convert()
         self.highlight_surf.fill(WHITE)
-        self.highlight_surf.set_alpha(70)
+        self.highlight_surf.set_alpha(120)
 
     def run(self):
         r = randint(200, 255)

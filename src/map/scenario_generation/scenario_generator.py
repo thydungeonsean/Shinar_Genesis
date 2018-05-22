@@ -1,9 +1,11 @@
 from src.enum.terrain import *
 from random import *
-from village import Village
-from palace import Palace
-from granary import Granary
+from src.game_object.village import Village
+from src.game_object.palace import Palace
+from src.game_object.granary import Granary
 from src.enum.object_codes import *
+
+from map_tools import *
 
 
 class ScenarioGenerator(object):
@@ -26,9 +28,11 @@ class ScenarioGenerator(object):
 
     def populate(self):
         self.place_palaces()
+        self.initiate_dominion()
+
         self.place_granaries()
         self.place_villages()
-        self.initiate_dominion()
+        # self.blast_farm()
 
     def place_palaces(self):
 
@@ -42,6 +46,7 @@ class ScenarioGenerator(object):
     def place_villages(self):
 
         valid_coords = self.tile_map.get_all_but({DESERT, RIVER})
+        valid_coords = filter(lambda x: x not in self.game_object_map.occupied(), valid_coords)
         size_dist = (1, 2, 2, 3, 3, 3, 4, 4, 5)
 
         for i in range(3):
@@ -53,16 +58,28 @@ class ScenarioGenerator(object):
     def initiate_dominion(self):
 
         palaces = self.game_object_map.get_objects_with_code(PALACE)
-        for p in palaces:
-            self.dominion_map.add_dominion(p.owner_id, p.coord.int_position)
+
+        for point in self.dominion_map.all_points:
+            closest_palace = get_closest(point, palaces)
+
+            if closest_palace is not None:
+                self.dominion_map.add_dominion(closest_palace.owner_id, point)
 
     def place_granaries(self):
 
         for player in self.state.player_manager.players:
 
             valid = self.tile_map.get_all({FERTILE, PLAINS})
+            valid = filter(lambda x: self.dominion_map.point_is_in_player_dominion(x, player), valid)
             valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
 
-            g = Granary(self.state, choice(valid), player)
-            self.game_object_map.add_game_object(g)
+            if valid:
+                g = Granary(self.state, choice(valid), player)
+                self.game_object_map.add_game_object(g)
 
+    def blast_farm(self):
+
+        for point in self.tile_map.all_points:
+
+            if self.tile_map.get_tile(point) in {FERTILE, PLAINS}:
+                self.state.map.farm_map.add_farm(point)
