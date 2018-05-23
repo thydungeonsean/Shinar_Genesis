@@ -13,6 +13,7 @@ class MapImage(object):
         self.parent_map = parent_map
         self.tile_map = tile_map
         self.farm_map = parent_map.farm_map
+        self.dominion_map = parent_map.dominion_map
         self.image = None
         self.river_colors = {}
 
@@ -54,6 +55,9 @@ class MapImage(object):
         if (x, y) in self.farm_map.farms:
             self.draw_farm((x, y))
 
+        if (x, y) in self.dominion_map.edges:
+            self.draw_border((x, y))
+
     def fluctuate_river_colors(self):
 
         for point in self.tile_map.get_all({RIVER}):
@@ -85,3 +89,15 @@ class MapImage(object):
 
         for tile in tiles:
             self.render_tile(tile)
+
+    def draw_border(self, point):
+
+        img_code = self.dominion_map.edges[point]
+        color = self.dominion_map.get_color(point)
+        img = self.dominion_map.edge_tile_map.load_border_image(img_code, color)
+
+        x, y = point
+        px = x * TILE_SIZE
+        py = y * TILE_SIZE
+
+        img.draw(self.image, (px, py))

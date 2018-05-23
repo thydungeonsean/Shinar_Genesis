@@ -1,6 +1,7 @@
 from src.enum.actions import *
 from plant_action import PlantAction
 from harvest_action import HarvestAction
+from rule_action import RuleAction
 
 
 actions = {
@@ -8,6 +9,7 @@ actions = {
     HARVEST_ACTION: HarvestAction,
     RAISE_ACTION: PlantAction,
     MOVE_ACTION: PlantAction,
+    RULE_ACTION: RuleAction,
 }
 
 

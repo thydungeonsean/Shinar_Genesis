@@ -5,12 +5,17 @@ class Action(object):
 
     def __init__(self, state, player, action_id):
 
+        # TODO player is an unneccessary parameter here?
+
         self.state = state
         self.player = player
         self.action_id = action_id
         self.action_name = action_names[action_id]
         self.valid_points = None
 
+        self.initialize_action()
+
+    def initialize_action(self):
         self.compute_valid_points()
 
     def compute_valid_points(self):

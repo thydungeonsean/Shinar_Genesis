@@ -45,7 +45,6 @@ class StrategicMap(object):
     def draw(self, surface):
         self.map_image.draw(surface)
         self.game_object_map.draw(surface)
-        self.dominion_map.draw(surface)
 
     def run(self):
         self.dominion_map.run()

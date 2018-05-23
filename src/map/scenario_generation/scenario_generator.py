@@ -59,11 +59,16 @@ class ScenarioGenerator(object):
 
         palaces = self.game_object_map.get_objects_with_code(PALACE)
 
-        for point in self.dominion_map.all_points:
-            closest_palace = get_closest(point, palaces)
+        for palace in palaces:
 
-            if closest_palace is not None:
-                self.dominion_map.add_dominion(closest_palace.owner_id, point)
+            zone = get_starting_zone(self.state, palace, 50)
+            map(lambda x: self.dominion_map.add_dominion(palace.owner_id, x), zone)
+
+        # for point in self.dominion_map.all_points:
+        #     closest_palace = get_closest(point, palaces)
+        #
+        #     if closest_palace is not None:
+        #         self.dominion_map.add_dominion(closest_palace.owner_id, point)
 
     def place_granaries(self):
 

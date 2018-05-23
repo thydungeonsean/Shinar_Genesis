@@ -26,6 +26,9 @@ def get_coords_from_objects(objects):
     return [x.coord.int_position for x in objects]
 
 
+#############################################3
+# HARVEST
+#############
 def get_connected_farms(state, point, exclude_connectors=True):
 
     edge = [point]
@@ -86,6 +89,9 @@ def get_adj((x, y)):
     return {(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
 
 
+##############################################
+# PLANT
+#############
 def plant_edge(state, edge, touched):
 
     return flood(edge, get_valid_planting_func(state), touched)
@@ -113,3 +119,25 @@ def get_valid_planting_func(state):
         return point not in obj_map.occupied()
 
     return valid_for_planting
+
+
+##############################################
+# RULE
+###########
+def get_rule_edge(state, edge, touched):
+
+    return flood(edge, get_valid_rule_func(state), touched)
+
+
+def get_valid_rule_func(state):
+
+    terrain = state.map.tile_map
+    obj_map = state.map.game_object_map
+
+    def valid_for_rule(point):
+
+        if not terrain.in_bounds(point):
+            return False
+        return point not in obj_map.occupied()
+
+    return valid_for_rule

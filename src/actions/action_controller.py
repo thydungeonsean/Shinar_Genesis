@@ -47,13 +47,16 @@ class ActionController(object):
         self.state.map_highlighter.clear_highlight()
 
     def select_action(self, action_id):
+
         self.action_table[action_id] = True
+
         # highlight button etc.
         ui = UIController(self.state)
         ui.highlight_action_button(action_id)
 
         # set as active action
         self.load_action(action_id)
+
         # highlight valid_tiles
         self.state.map_highlighter.highlight(self.action)
 
