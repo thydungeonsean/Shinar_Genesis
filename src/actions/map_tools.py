@@ -26,6 +26,67 @@ def get_coords_from_objects(objects):
     return [x.coord.int_position for x in objects]
 
 
+def get_friendly_armies(state):
+    armies = state.map.game_object_map.get_objects_with_code(ARMY)
+    return filter_friendly_objects(state, armies)
+
+
+def enemy_building_occupied(state, point):
+    obj = state.map.game_object_map.get_at(point)
+    if not obj:
+        return False
+    obj = obj[0]
+    if obj.obj_code != ARMY:
+        player_id = state.player_manager.active_player.player_id
+        return obj.owner_id != player_id
+    return False
+
+
+def friendly_occupied(state, point):
+
+    obj = state.map.game_object_map.get_at(point)
+    if not obj:
+        return False
+    obj = obj[0]
+    player_id = state.player_manager.active_player.player_id
+    return obj.owner_id == player_id
+
+
+def enemy_occupied(state, point):
+
+    obj = state.map.game_object_map.get_at(point)
+    if not obj:
+        return False
+    obj = obj[0]
+    player_id = state.player_manager.active_player.player_id
+    return obj.owner_id != player_id
+
+
+##############################################
+# valid placement functions
+###############################
+def in_bounds(state, point):
+    return state.map.tile_map.in_bounds(point)
+
+
+def in_player_domain(state, point):
+    dominion_map = state.map.dominion_map
+    return dominion_map.point_is_in_player_dominion(point, state.player_manager.active_player)
+
+
+def has_terrain(state, point, valid_terrain):
+    terrain = state.map.tile_map.get_tile(point)
+    return terrain in valid_terrain
+
+
+def unoccupied(state, point):
+    return point not in state.map.game_object_map.occupied()
+
+
+def has_farm(state, point):
+    return state.map.farm_map.is_farm(point)
+
+
 #############################################3
 # HARVEST
 #############
@@ -48,16 +109,12 @@ def get_connected_farms(state, point, exclude_connectors=True):
 
 def get_valid_connected_farm_func(state):
 
-    dominion = state.map.dominion_map
-    farm_map = state.map.farm_map
-
     def valid_connected_farm(point):
         # point in active player domain
-        if not dominion.in_bounds(point) or \
-                not dominion.point_is_in_player_dominion(point, state.player_manager.active_player):
+        if not in_bounds(state, point) or not in_player_domain(state, point):
             return False
         # point is farm or point is village or granary
-        return farm_map.is_farm(point) or point_is_farm_connecting(state, point)
+        return has_farm(state, point) or point_is_farm_connecting(state, point)
 
     return valid_connected_farm
 
@@ -99,24 +156,20 @@ def plant_edge(state, edge, touched):
 
 def get_valid_planting_func(state):
 
-    dominion = state.map.dominion_map
     farm_map = state.map.farm_map
-    terrain = state.map.tile_map
-    obj_map = state.map.game_object_map
 
     def valid_for_planting(point):
         # point in active player domain
-        if not dominion.in_bounds(point) or \
-                not dominion.point_is_in_player_dominion(point, state.player_manager.active_player):
+        if not in_bounds(state, point) or not in_player_domain(state, point):
             return False
         # point is not farm
         if farm_map.is_farm(point):
             return False
         # point is farmable
-        if terrain.get_tile(point) not in {PLAINS, FERTILE}:
+        if not has_terrain(state, point, {PLAINS, FERTILE}):
             return False
 
-        return point not in obj_map.occupied()
+        return unoccupied(state, point)
 
     return valid_for_planting
 
@@ -131,13 +184,132 @@ def get_rule_edge(state, edge, touched):
 
 def get_valid_rule_func(state):
 
-    terrain = state.map.tile_map
-    obj_map = state.map.game_object_map
-
     def valid_for_rule(point):
 
-        if not terrain.in_bounds(point):
+        if not in_bounds(state, point):
             return False
-        return point not in obj_map.occupied()
+        return unoccupied(state, point)
 
     return valid_for_rule
+
+
+####################################################
+# MILITARY
+####################3
+def get_army_placement_points(state):
+
+    palaces = get_coords_from_objects(get_friendly_buildings_of_type(state, PALACE))
+    towers = get_coords_from_objects(get_friendly_buildings_of_type(state, TOWER))
+
+    spawners = palaces
+    spawners.extend(towers)
+
+    spawn_points = flood(spawners, get_valid_spawn_func(state), set(spawners))
+    return spawn_points
+
+
+def get_valid_spawn_func(state):
+
+    def valid_spawn(point):
+        if not in_bounds(state, point) or not in_player_domain(state, point):
+            return False
+        if has_terrain(state, point, {RIVER}):
+            return False
+        return unoccupied(state, point)
+
+    return valid_spawn
+
+
+def get_army_movement_options(state, army, conquer=False):
+
+    touched = set()
+    edge = [army.coord.int_position]
+
+    for i in range(army.speed):
+        edge = flood(edge, get_valid_movement_func(state, conquer), touched)
+        touched.update(edge)
+
+    touched = filter(lambda x: not has_terrain(state, x, {RIVER}), touched)
+
+    return list(touched)
+
+
+def get_valid_movement_func(state, conquer):
+
+    def valid_movement(point):
+        if not in_bounds(state, point):
+            return False
+        if enemy_building_occupied(state, point):
+            return conquer
+
+        return not friendly_occupied(state, point)
+
+    return valid_movement
+
+
+#########################################
+# Military effects
+
+def get_raided_points(state, point):
+
+    def valid(p):
+        return in_bounds(state, p)
+
+    edge = [point]
+    touched = set()
+
+    for i in range(5):
+        edge = flood(edge, valid, touched)
+        touched.update(edge)
+
+    raided = filter(lambda x: has_farm(state, x) and not in_player_domain(state, x), touched)
+    return raided
+
+
+def get_conquered_points(state, point):
+
+    def valid(p):
+        if not in_bounds(state, p):
+            return False
+        return not enemy_occupied(state, p)
+
+    edge = [point]
+    touched = set()
+
+    for i in range(4):
+        edge = flood(edge, valid, touched)
+        touched.update(edge)
+
+    branch_points = adj_to_player_domain(state, touched)
+    if not branch_points:
+        return []
+    if len(branch_points) == len(touched):
+        return branch_points
+
+    else:
+
+        def valid_in_range(p):
+            return p in touched
+
+        edge = branch_points
+        conquered = set()
+        while edge:
+            edge = flood(edge, valid_in_range, conquered)
+            conquered.update(edge)
+
+        return conquered
+
+
+def adj_to_player_domain(state, touched):
+
+    return filter(lambda x: in_player_domain(state, x) or adj_in_player_domain(state, x)
+                  , touched)
+
+
+def adj_in_player_domain(state, (x, y)):
+
+    adj = get_adj((x, y))
+    for a in adj:
+        if in_bounds(state, a) and in_player_domain(state, a):
+            return True
+    return False

@@ -20,8 +20,8 @@ class StrategicMap(object):
 
         self.state = state
 
-        self.w = 25
-        self.h = 20
+        self.w = 30
+        self.h = 24
         self.dominion_map = DominionMap(self.w, self.h, self.state)
         self.river = RiverGenerator(self).generate_river()
         self.moisture_map = MoistureMap(self.w, self.h, self.river)

@@ -18,6 +18,9 @@ class Action(object):
     def initialize_action(self):
         self.compute_valid_points()
 
+    def deinitialize_action(self):
+        pass
+
     def compute_valid_points(self):
 
         self.valid_points = set(filter(lambda x: self.point_is_valid(x), self.state.map.tile_map.all_points))
@@ -28,3 +31,6 @@ class Action(object):
     def perform_action(self, point):
         if point in self.valid_points:
             print self.action_name + ' performed successfully at ' + str(point)
+
+    def highlight_tiles(self):
+        self.state.action_controller.highlight_tiles()

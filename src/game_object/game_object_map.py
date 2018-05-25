@@ -28,5 +28,10 @@ class GameObjectMap(object):
         self.game_objects.append(obj)
 
     def get_objects_with_code(self, obj_code):
-        return filter(lambda x: x.obj_code == obj_code, self.game_objects)
+        if isinstance(obj_code, set):
+            return filter(lambda x: x.obj_code in obj_code, self.game_objects)
+        else:
+            return filter(lambda x: x.obj_code == obj_code, self.game_objects)
 
+    def get_friendly_objects(self, player):
+        return filter(lambda x: x.owner_id == player.player_id, self.game_objects)

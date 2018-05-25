@@ -43,6 +43,7 @@ class ActionController(object):
         ui = UIController(self.state)
         ui.clear_action_button(action_id)
 
+        self.action.deinitialize_action()
         self.action = None
         self.state.map_highlighter.clear_highlight()
 
@@ -58,7 +59,7 @@ class ActionController(object):
         self.load_action(action_id)
 
         # highlight valid_tiles
-        self.state.map_highlighter.highlight(self.action)
+        self.highlight_tiles()
 
     def clear_actions(self):
 
@@ -72,3 +73,6 @@ class ActionController(object):
     def load_action(self, action_id):
 
         self.action = load_action(action_id, self.state)
+
+    def highlight_tiles(self):
+        self.state.map_highlighter.highlight(self.action)

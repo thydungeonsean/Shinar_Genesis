@@ -2,6 +2,7 @@ from elements.player_banner import PlayerBanner
 from elements.pass_button import PassButton
 from elements.action_button import ActionButton
 from elements.action_panel import ActionPanel
+from elements.action_choice_panel import ActionChoicePanel
 
 from elements.components.hightlight_component import HighlightComponent
 
@@ -43,3 +44,15 @@ class UIController(object):
         highlight = HighlightComponent(action_button)
         action_button.add_named_component(highlight, 'highlight')
 
+    # military actions
+    def open_action_choice_panels(self, action):
+
+        def adder():
+            action_choices = ActionChoicePanel(self.ui, action)
+            self.ui.add_element(action_choices)
+
+        self.ui.queue_element(adder)
+
+    def close_action_choice_panels(self, action):
+
+        self.ui.dequeue_element_by_key('action_choice_panel')

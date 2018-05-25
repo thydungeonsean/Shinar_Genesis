@@ -1,12 +1,12 @@
-from player_structure import PlayerStructure
+from player_game_object import PlayerGameObject
 from src.enum.object_codes import PALACE
 
 
-class Palace(PlayerStructure):
+class Palace(PlayerGameObject):
 
     def __init__(self, state, coord, player):
 
-        PlayerStructure.__init__(self, state, coord, player, PALACE)
+        PlayerGameObject.__init__(self, state, coord, player, PALACE)
 
     def draw(self, surface):
         surface.blit(self.image, self.pixel_coord.int_position)
