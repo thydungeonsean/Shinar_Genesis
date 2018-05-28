@@ -12,7 +12,7 @@ class RuleAction(Action):
 
     def compute_valid_points(self):
 
-        palaces = get_friendly_buildings_of_type(self.state, PALACE)
+        palaces = get_friendly_palaces(self.state)
         points = get_coords_from_objects(palaces)
         self.valid_points = set(points)
 

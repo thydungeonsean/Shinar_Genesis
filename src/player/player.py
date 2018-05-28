@@ -8,7 +8,7 @@ class Player(object):
     AI = 0
     HUMAN = 1
 
-    id_state = 1000000
+    id_state = 1000
 
     @classmethod
     def assign_player_id(cls):
@@ -28,6 +28,8 @@ class Player(object):
 
         self.controller = self.load_controller()
 
+        self.active_construction = None
+
     def load_controller(self):
         if self.controller_id == Player.AI:
             return AIController(self)
@@ -40,3 +42,9 @@ class Player(object):
 
     def deactivate_controller(self):
         self.controller.deactivate()
+
+    def advance_construction(self):
+
+        self.active_construction.advance_construction()
+        if not self.active_construction.under_construction:
+            self.active_construction = None

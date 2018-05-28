@@ -4,6 +4,7 @@ from harvest_action import HarvestAction
 from rule_action import RuleAction
 from raid_action import RaidAction
 from conquer_action import ConquerAction
+from build_aciton import BuildAction
 
 
 actions = {
@@ -14,6 +15,7 @@ actions = {
     RULE_ACTION: RuleAction,
     RAID_ACTION: RaidAction,
     CONQUER_ACTION: ConquerAction,
+    BUILD_ACTION: BuildAction,
 }
 
 

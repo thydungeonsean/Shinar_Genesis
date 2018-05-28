@@ -5,7 +5,7 @@ class Action(object):
 
     def __init__(self, state, player, action_id):
 
-        # TODO player is an unneccessary parameter here?
+        # TODO player is an unnecessary parameter here?
 
         self.state = state
         self.player = player

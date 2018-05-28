@@ -9,6 +9,8 @@ RULE_ACTION = 5
 RAID_ACTION = 6
 CONQUER_ACTION = 7
 DEFEND_ACTION = 8
+BUILD_ACTION = 9
+
 
 action_names = {
     PLANT_ACTION: "Plant",
@@ -20,6 +22,7 @@ action_names = {
     RAID_ACTION: "Raid",
     CONQUER_ACTION: "Conquer",
     DEFEND_ACTION: "Defend",
+    BUILD_ACTION: "Build",
 }
 
-test_actions = [PLANT_ACTION, HARVEST_ACTION, RAID_ACTION, CONQUER_ACTION]
+test_actions = [PLANT_ACTION, HARVEST_ACTION, BUILD_ACTION, RULE_ACTION]

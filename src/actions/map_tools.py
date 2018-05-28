@@ -14,6 +14,13 @@ def get_friendly_buildings_of_type(state, building_code):
     return buildings
 
 
+def get_friendly_palaces(state):
+
+    palaces = get_friendly_buildings_of_type(state, PALACE)
+
+    return filter(lambda x: not x.under_construction, palaces)
+
+
 def filter_friendly_objects(state, objects):
 
     player_id = state.player_manager.active_player.player_id
@@ -50,6 +57,19 @@ def friendly_occupied(state, point):
     obj = obj[0]
     player_id = state.player_manager.active_player.player_id
     return obj.owner_id == player_id
+
+
+def friendly_building_occupied(state, point):
+    obj = state.map.game_object_map.get_at(point)
+    if not obj:
+        return False
+    obj = obj[0]
+    if obj.obj_code == ARMY:
+        return False
+    else:
+        obj_id = obj.owner_id
+        player_id = state.player_manager.active_player.player_id
+        return obj_id == player_id
 
 
 def enemy_occupied(state, point):
@@ -313,3 +333,62 @@ def adj_in_player_domain(state, (x, y)):
         if in_bounds(state, a) and in_player_domain(state, a):
             return True
     return False
+
+
+############################################################################
+# BUILD ACTION
+##################
+def get_valid_build_points(state, building_id):
+
+    dominion_map = state.map.dominion_map
+    domain = dominion_map.get_all(state.player_manager.active_player.player_id)
+
+    building_points = filter(lambda x: not_adj_to_building(state, x) and not has_terrain(state, x, {RIVER}), domain)
+
+    if building_id == PALACE:
+        building_points = palace_buffer(state, building_points)
+    elif building_id == GRANARY:
+        building_points = filter(lambda x: has_terrain(state, x, {FERTILE, PLAINS}), building_points)
+
+    return building_points
+
+
+def not_adj_to_building(state, (x, y)):
+
+    adj = [(x, y), (x+1, y), (x-1, y), (x, y+1), (x, y-1),
+           (x+1, y+1), (x-1, y+1), (x+1, y-1), (x-1, y-1)]
+
+    for point in adj:
+        if not in_bounds(state, point):
+            pass
+        if friendly_building_occupied(state, point):
+            return False
+    return True
+
+
+def palace_buffer(state, points):
+
+    palaces = state.map.game_object_map.get_objects_with_code(PALACE)
+    player_id = state.player_manager.active_player.player_id
+
+    palaces = filter(lambda x: x.owner_id == player_id, palaces)
+
+    # TODO palace buffer value here
+    points = filter(lambda x: min_dist_from_palaces(palaces, 5, x), points)
+
+    return points
+
+
+def get_dist((ax, ay), (bx, by)):
+
+    return abs(ax-bx) + abs(ay-by)
+
+
+def min_dist_from_palaces(palaces, min_dist, point):
+
+    for p in palaces:
+        p_coord = p.coord.int_position
+        if get_dist(p_coord, point) <= min_dist:
+            return False
+
+    return True

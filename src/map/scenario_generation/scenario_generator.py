@@ -40,7 +40,7 @@ class ScenarioGenerator(object):
             valid = self.tile_map.get_all_but(RIVER)
             valid = filter(lambda x: x not in self.game_object_map.occupied(), valid)
 
-            p = Palace(self.state, choice(valid), player)
+            p = Palace(self.state, choice(valid), player, new_construction=False)
             self.game_object_map.add_game_object(p)
 
     def place_villages(self):

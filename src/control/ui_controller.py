@@ -2,7 +2,10 @@ from elements.player_banner import PlayerBanner
 from elements.pass_button import PassButton
 from elements.action_button import ActionButton
 from elements.action_panel import ActionPanel
+
 from elements.action_choice_panel import ActionChoicePanel
+from elements.build_choice_panel import BuildChoicePanel
+from elements.construct_panel import ConstructPanel
 
 from elements.components.hightlight_component import HighlightComponent
 
@@ -56,3 +59,24 @@ class UIController(object):
     def close_action_choice_panels(self, action):
 
         self.ui.dequeue_element_by_key('action_choice_panel')
+
+    # build action
+    def open_build_choice_panels(self, player, action):
+
+        if player.active_construction is not None:
+
+            def adder():
+                construct = ConstructPanel(self.ui, action, player.active_construction)
+                self.ui.add_element(construct)
+
+        else:
+
+            def adder():
+                build_choices = BuildChoicePanel(self.ui, action)
+                self.ui.add_element(build_choices)
+
+        self.ui.queue_element(adder)
+
+    def close_build_choice_panels(self, action):
+
+        self.ui.dequeue_element_by_key('build_choice_panel')

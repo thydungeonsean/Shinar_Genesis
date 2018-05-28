@@ -5,6 +5,8 @@ import pygame
 
 class GameObject(object):
 
+    START_COLOR = (127, 127, 127)
+
     def __init__(self, state, coord, obj_code):
 
         self.obj_code = obj_code
@@ -37,4 +39,4 @@ class GameObject(object):
     def change_color(self, c):
 
         px_array = pygame.PixelArray(self.image)
-        px_array.replace((127, 127, 127), c)
+        px_array.replace(GameObject.START_COLOR, c)
