@@ -50,3 +50,6 @@ class BaseState(object):
     def quit(self):
         self.state_manager.next_state = None
         self.exit_state = True
+
+    def reset(self):
+        self.exit_state = False

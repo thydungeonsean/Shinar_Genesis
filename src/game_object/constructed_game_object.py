@@ -39,9 +39,9 @@ class ConstructedGameObject(PlayerGameObject):
 
     def update_image(self):
         self.image = self.load_image(self.object_image_name())
-        self.update_color()
+        self.change_color(ConstructedGameObject.START_COLOR, self.color)
 
-    def update_color(self):
+    def update_color(self, color):
 
         px_array = pygame.PixelArray(self.image)
-        px_array.replace(ConstructedGameObject.START_COLOR, self.color)
+        px_array.replace(ConstructedGameObject.START_COLOR, color)

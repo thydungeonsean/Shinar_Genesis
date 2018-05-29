@@ -1,8 +1,6 @@
 from src.constants import DISPLAY_W, DISPLAY_H
 from src.control.elements.element import Element
 from ..ui import UI
-from src.control.elements.components.text_component import TextComponent
-from src.control.elements.player_banner import PlayerBanner
 
 
 def load_strategic_ui(state):

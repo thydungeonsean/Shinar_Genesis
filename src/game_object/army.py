@@ -17,3 +17,20 @@ class Army(PlayerGameObject):
     def move(self, point):
         self.coord.set_from_tuple(point)
         self.set_position()
+
+    def rout(self):
+        self.remove_army()
+        print 'routed'
+
+    def remove_army(self):
+        self.state.map.game_object_map.remove_game_object(self)
+
+    def get_garrison(self):
+        raise Exception("Army object is being asked for garrison")
+
+    def is_garrison(self):
+        return False
+
+    def form_garrison(self, building):
+
+        self.remove_army()

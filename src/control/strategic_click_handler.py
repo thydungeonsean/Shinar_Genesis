@@ -2,7 +2,7 @@ import pygame
 from src.constants import TILE_SIZE
 
 
-class ClickHandler(object):
+class StrategicClickHandler(object):
 
     def __init__(self, state):
 

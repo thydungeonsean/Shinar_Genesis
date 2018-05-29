@@ -6,6 +6,7 @@ from elements.action_panel import ActionPanel
 from elements.action_choice_panel import ActionChoicePanel
 from elements.build_choice_panel import BuildChoicePanel
 from elements.construct_panel import ConstructPanel
+from elements.military_upgrade_panel import MilitaryUpgradePanel
 
 from elements.components.hightlight_component import HighlightComponent
 
@@ -56,7 +57,7 @@ class UIController(object):
 
         self.ui.queue_element(adder)
 
-    def close_action_choice_panels(self, action):
+    def close_action_choice_panels(self):
 
         self.ui.dequeue_element_by_key('action_choice_panel')
 
@@ -77,6 +78,17 @@ class UIController(object):
 
         self.ui.queue_element(adder)
 
-    def close_build_choice_panels(self, action):
+    def close_build_choice_panels(self):
 
         self.ui.dequeue_element_by_key('build_choice_panel')
+
+    def open_military_upgrade_panel(self, action, point):
+
+        def adder():
+            upgrade = MilitaryUpgradePanel(self.ui, action, point)
+            self.ui.add_element(upgrade)
+
+        self.ui.queue_element(adder)
+
+    def close_military_upgrade_panel(self):
+        self.ui.dequeue_element_by_key('military_upgrade_panel')

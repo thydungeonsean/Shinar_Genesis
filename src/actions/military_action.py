@@ -1,7 +1,8 @@
 from action import Action
 from src.control.ui_controller import UIController
-from map_tools import get_army_placement_points, get_friendly_armies, get_coords_from_objects, get_army_movement_options
+from map_tools import *
 from src.game_object.army import Army
+from src.enum.object_codes import ARMY
 
 
 class MilitaryAction(Action):
@@ -18,7 +19,7 @@ class MilitaryAction(Action):
         Action.__init__(self, state, player, action_id)
 
         self.perform_state_action = {
-            cls.CHOOSING: self.choose_action,
+            cls.CHOOSING: self.null_action,
             cls.SELECTING: self.perform_select_action,
             cls.MOVING: self.perform_move_action,
             cls.PLACING: self.perform_place_action
@@ -42,9 +43,6 @@ class MilitaryAction(Action):
         if point in self.valid_points:
             self.perform_state_action[self.action_state](point)
 
-    def choose_action(self, point):
-        print 'choosing'
-
     # choice panel handles
     def choose_place_action(self):
         self.action_state = MilitaryAction.PLACING
@@ -67,7 +65,7 @@ class MilitaryAction(Action):
     def close_panels(self):
 
         ui = UIController(self.state)
-        ui.close_action_choice_panels(self)
+        ui.close_action_choice_panels()
 
     # placing action
     def compute_valid_placement_points(self):
@@ -109,13 +107,23 @@ class MilitaryAction(Action):
 
     def perform_move_action(self, point):
 
-        # move army to point
-        self.selected_army.move(point)
-
         # trigger battle if necessary
+        if self.battle_is_triggered(point):  # battle is triggered
 
-        # trigger action effect
-        self.activate_effect(point)
+            # move army to point
+            self.selected_army.move(point)
+
+            print 'battle initiated'
+            defender = self.get_defending_army(point)
+            win_effect, lose_effect = self.get_battle_win_loss_effects(point, defender)
+
+            self.state.initiate_battle(self.selected_army, None, win_effect, lose_effect)
+
+        else:
+            # move army to point
+            self.selected_army.move(point)
+            # trigger action effect
+            self.activate_effect(point)
 
         # end action
 
@@ -128,3 +136,38 @@ class MilitaryAction(Action):
 
     def select_text(self):
         return 'Select'
+
+    # battle triggering helper methods
+    def battle_is_triggered(self, point):
+        return enemy_occupied(self.state, point)  # or self.state.map.defend_map.point_defended(point)
+
+    def get_battle_win_loss_effects(self, point, defender):
+
+        win_effect = self.get_win_effect(point, defender)
+
+        def lose_effect():
+            print 'defender wins'
+            self.selected_army.rout()
+            # if defender intercepted, move them to this point
+            # end action
+
+        return win_effect, lose_effect
+
+    def get_win_effect(self, point, defender):
+
+        def win_effect():
+            self.activate_effect(point)
+            print 'attacker wins'
+            defender.rout()
+            # end action
+
+        return win_effect
+
+    def get_defending_army(self, point):
+
+        obj = self.state.map.game_object_map.get_at(point)
+        obj = filter(lambda x: x.owner_id != self.player.player_id, obj)[0]
+        if obj.obj_code == ARMY:
+            return obj
+        else:
+            return obj.get_garrison()

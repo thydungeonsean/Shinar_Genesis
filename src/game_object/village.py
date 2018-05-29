@@ -1,17 +1,18 @@
-from game_object import GameObject
+from player_game_object import PlayerGameObject
 from src.enum.object_codes import VILLAGE
 from src.constants import TILE_SIZE
 import pygame
+from src.player.neutral_player import NeutralPlayer
 
 
-class Village(GameObject):
+class Village(PlayerGameObject):
 
     o = 10
     hut_pos = ((o, o), (TILE_SIZE-o, o), (o, TILE_SIZE-o), (TILE_SIZE-o, TILE_SIZE-o), (TILE_SIZE/2, TILE_SIZE/2))
 
     def __init__(self, state, coord, size):
 
-        GameObject.__init__(self, state, coord, VILLAGE)
+        PlayerGameObject.__init__(self, state, coord, NeutralPlayer.get_instance(), VILLAGE)
         self.size = size
         self.happiness = 80
 
@@ -45,3 +46,15 @@ class Village(GameObject):
         self.hut_rect.center = (x, y)
 
         surface.blit(self.hut_image, self.hut_rect)
+
+    def update_color(self, color):
+        pass
+
+    def change_color(self, old, new):
+        pass
+
+    def object_image_name(self):
+        return None
+
+    def load_image(self, id):
+        pass

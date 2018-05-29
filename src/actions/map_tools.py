@@ -82,6 +82,15 @@ def enemy_occupied(state, point):
     return obj.owner_id != player_id
 
 
+def enemy_palace(state, point):
+
+    player_id = state.player_manager.active_player.player_id
+    palaces = state.map.game_object_map.get_objects_with_code(PALACE)
+    palaces = filter(lambda x: x.owner_id != player_id, palaces)
+    coords = get_coords_from_objects(palaces)
+    return point in coords
+
+
 ##############################################
 # valid placement functions
 ###############################
@@ -291,7 +300,7 @@ def get_conquered_points(state, point):
     def valid(p):
         if not in_bounds(state, p):
             return False
-        return not enemy_occupied(state, p)
+        return not enemy_palace(state, p)
 
     edge = [point]
     touched = set()

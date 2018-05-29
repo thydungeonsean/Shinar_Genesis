@@ -18,7 +18,7 @@ class BuildAction(Action):
         Action.__init__(self, state, player, BUILD_ACTION)
 
         self.perform_state_action = {
-            cls.CHOOSING: self.choose_action,
+            cls.CHOOSING: self.null_action,
             cls.PLACING: self.perform_place_action
         }
 
@@ -40,9 +40,6 @@ class BuildAction(Action):
         if point in self.valid_points:
             self.perform_state_action[self.action_state](point)
 
-    def choose_action(self):
-        pass
-
     # choice panel handles
     def choose_build_action(self, obj_code):
         self.selected_building = obj_code
@@ -60,22 +57,48 @@ class BuildAction(Action):
     def close_panels(self):
 
         ui = UIController(self.state)
-        ui.close_build_choice_panels(self)
+        ui.close_build_choice_panels()
+        ui.close_military_upgrade_panel()
 
     def compute_valid_points(self):
         return get_valid_build_points(self.state, self.selected_building)
 
     # build action
     def perform_place_action(self, point):
-        building = buildings[self.selected_building](self.state, point, self.player)
-        self.state.map.game_object_map.add_game_object(building)
 
-        if self.selected_building in {ZIGGURAT, PALACE}:
-            self.player.active_construction = building
+        if self.selected_building == TOWER:
 
+            # allow player to upgrade their army when building a tower
+            ui = UIController(self.state)
+            ui.open_military_upgrade_panel(self, point)
+            del self.valid_points[:]
+            self.highlight_tiles()
+
+        else:
+
+            building = buildings[self.selected_building](self.state, point, self.player)
+            self.state.map.game_object_map.add_game_object(building)
+
+            if self.selected_building in {ZIGGURAT, PALACE}:
+                self.player.active_construction = building
+
+            # TODO end action
+
+    # advance construction on players current project
     def construct_action(self):
 
         self.player.advance_construction()
+        # TODO end action
 
+    # end tower build action
+    def build_tower(self, point):
+
+        building = buildings[self.selected_building](self.state, point, self.player)
+        self.state.map.game_object_map.add_game_object(building)
+
+        ui = UIController(self.state)
+        ui.close_military_upgrade_panel()
+
+        # TODO end action
 
 

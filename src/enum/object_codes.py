@@ -7,6 +7,7 @@ ZIGGURAT = 70
 VILLAGE = 71
 
 ARMY = 80
+GARRISON = 81
 
 object_names = {
     PALACE: 'palace',

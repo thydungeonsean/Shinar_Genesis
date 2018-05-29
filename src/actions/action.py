@@ -34,3 +34,6 @@ class Action(object):
 
     def highlight_tiles(self):
         self.state.action_controller.highlight_tiles()
+
+    def null_action(self, point):
+        pass

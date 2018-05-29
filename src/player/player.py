@@ -48,3 +48,7 @@ class Player(object):
         self.active_construction.advance_construction()
         if not self.active_construction.under_construction:
             self.active_construction = None
+
+    def can_add_ziggurat(self):
+        # has < 3 ziggurats
+        return True

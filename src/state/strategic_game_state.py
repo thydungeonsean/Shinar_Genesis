@@ -1,7 +1,7 @@
 from base_state import BaseState
 
 from src.control.template.strategic_ui import load_strategic_ui
-from src.control.template.strategic_input_handler import get_strategic_input_handler
+from src.control.template.strategic_input_handler import load_strategic_input_handler
 from src.actions.action_controller import ActionController
 from src.map.strategic_map import StrategicMap
 
@@ -21,23 +21,29 @@ class StrategicGameState(BaseState):
         BaseState.__init__(self, state_manager)
         self.action_controller = ActionController(self)
         self.ui = load_strategic_ui(self)
-        self.input_handler = get_strategic_input_handler(self)
+        self.input_handler = load_strategic_input_handler(self)
         self.screen = None
 
         self.map = StrategicMap(self)
-        self.player_manager = PlayerManager(self, Player('Player 1', (200, 0, 0)), Player('Player 2', (0, 0, 200)))
+        self.player_manager = PlayerManager(self, Player('Player 1', (200, 0, 0)),
+                                            Player('Player 2', (0, 0, 200)),)
+                                            # Player('Player 3', (0, 220, 160)))
         self.turn_controller = TurnController(self)
         self.map_highlighter = MapHighlighter(self)
 
         self.frame_counter = FrameCounter(120)
+
+        self.initialized = False
 
     @property
     def frame(self):
         return self.frame_counter.frame
 
     def initialize(self):
-        self.map.initialize()
-        self.screen = Display.get_instance().display
+        if not self.initialized:
+            self.map.initialize()
+            self.screen = Display.get_instance().display
+            self.initialized = True
 
     def handle_input(self):
         self.input_handler.handle()
@@ -53,3 +59,8 @@ class StrategicGameState(BaseState):
         self.map_highlighter.run()
         self.turn_controller.run()
         self.frame_counter.run()
+
+    def initiate_battle(self, attacker, defender, attacker_win, defender_win):
+
+        self.state_manager.create_battle(self, attacker, defender, attacker_win, defender_win)
+        self.exit_state = True

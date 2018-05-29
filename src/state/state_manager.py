@@ -1,4 +1,5 @@
 from components.display import Display
+from battle_game_state import BattleGameState
 
 
 class StateManager(object):
@@ -20,6 +21,7 @@ class StateManager(object):
 
         while self.running:
 
+            self.initialize()
             self.current_state.main()
 
             self.current_state = self.load_next_state()
@@ -31,3 +33,7 @@ class StateManager(object):
     def assign_next_state(self, next_state):
 
         self.next_state = next_state
+
+    def create_battle(self, strategic_state, attacker, defender, attacker_win, defender_win):
+
+        self.next_state = BattleGameState(self, strategic_state, attacker, defender, attacker_win, defender_win)

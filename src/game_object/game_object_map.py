@@ -27,6 +27,9 @@ class GameObjectMap(object):
     def add_game_object(self, obj):
         self.game_objects.append(obj)
 
+    def remove_game_object(self, obj):
+        self.game_objects.remove(obj)
+
     def get_objects_with_code(self, obj_code):
         if isinstance(obj_code, set):
             return filter(lambda x: x.obj_code in obj_code, self.game_objects)
