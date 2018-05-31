@@ -27,6 +27,10 @@ class MilitaryAction(Action):
 
         self.selected_army = None
 
+    @property
+    def guard_map(self):
+        return self.state.map.guard_map
+
     def initialize_action(self):
 
         # open options
@@ -139,7 +143,8 @@ class MilitaryAction(Action):
 
     # battle triggering helper methods
     def battle_is_triggered(self, point):
-        return enemy_occupied(self.state, point)  # or self.state.map.defend_map.point_defended(point)
+        return enemy_occupied(self.state, point) or \
+               self.guard_map.point_is_guarded(point, self.player.player_id)
 
     def get_battle_win_loss_effects(self, point, defender):
 
@@ -165,9 +170,12 @@ class MilitaryAction(Action):
 
     def get_defending_army(self, point):
 
-        obj = self.state.map.game_object_map.get_at(point)
-        obj = filter(lambda x: x.owner_id != self.player.player_id, obj)[0]
-        if obj.obj_code == ARMY:
-            return obj
+        if self.guard_map.point_is_guarded(point, self.player.player_id):
+            return self.guard_map.sally_nearest_guard(point)
         else:
-            return obj.get_garrison()
+            obj = self.state.map.game_object_map.get_at(point)
+            obj = filter(lambda x: x.owner_id != self.player.player_id, obj)[0]
+            if obj.obj_code == ARMY:
+                return obj
+            else:
+                return obj.get_garrison()

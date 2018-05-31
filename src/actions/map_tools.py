@@ -91,6 +91,10 @@ def enemy_palace(state, point):
     return point in coords
 
 
+def active_player(state):
+    return state.player_manager.active_player
+
+
 ##############################################
 # valid placement functions
 ###############################
@@ -116,7 +120,12 @@ def has_farm(state, point):
     return state.map.farm_map.is_farm(point)
 
 
-#############################################3
+def point_is_guarded(state, point):
+
+    return state.map.guard_map.point_is_guarded(point, active_player(state))
+
+
+#############################################
 # HARVEST
 #############
 def get_connected_farms(state, point, exclude_connectors=True):
@@ -269,11 +278,20 @@ def get_valid_movement_func(state, conquer):
         if not in_bounds(state, point):
             return False
         if enemy_building_occupied(state, point):
-            return conquer
+            if point_is_guarded(state, point):
+                return False
+            else:
+                return conquer
 
         return not friendly_occupied(state, point)
 
     return valid_movement
+
+
+def get_army_defense_points(state, army):
+
+    move = get_army_movement_options(state, army)
+    return filter(lambda x: in_player_domain(state, x), move)
 
 
 #########################################

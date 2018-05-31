@@ -6,6 +6,7 @@ from src.game_object.game_object_map import GameObjectMap
 from src.image.map_image import MapImage
 from src.map.scenario_generation.scenario_generator import ScenarioGenerator
 from tile_map import TileMap
+from guard_map import GuardMap
 
 
 class StrategicMap(object):
@@ -27,6 +28,7 @@ class StrategicMap(object):
         self.moisture_map = MoistureMap(self.w, self.h, self.river)
         self.tile_map = TileMap(self.w, self.h, self.moisture_map)
         self.farm_map = FarmMap(self)
+        self.guard_map = GuardMap(self)
         self.map_image = MapImage(self, self.tile_map)
 
         self.game_object_map = GameObjectMap(self.state, self.tile_map)
@@ -37,6 +39,7 @@ class StrategicMap(object):
         self.moisture_map.initialize()
         self.tile_map.initialize()
         self.dominion_map.initialize()
+        self.guard_map.initialize()
         self.map_image.initialize()
 
         self.game_object_map.initialize()
@@ -49,5 +52,6 @@ class StrategicMap(object):
     def run(self):
         self.dominion_map.run()
         self.farm_map.run()
+        self.guard_map.run()
         self.map_image.run()
         self.game_object_map.run()

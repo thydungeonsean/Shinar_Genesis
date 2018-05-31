@@ -93,8 +93,9 @@ class BuildAction(Action):
     # end tower build action
     def build_tower(self, point):
 
-        building = buildings[self.selected_building](self.state, point, self.player)
-        self.state.map.game_object_map.add_game_object(building)
+        tower = buildings[self.selected_building](self.state, point, self.player)
+        self.state.map.game_object_map.add_game_object(tower)
+        tower.start_defend()
 
         ui = UIController(self.state)
         ui.close_military_upgrade_panel()

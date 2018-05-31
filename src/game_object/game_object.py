@@ -55,3 +55,6 @@ class GameObject(object):
     def raze(self):
         self.state.map.game_object_map.remove_game_object(self)
         print 'building razed'
+
+    def end_defend(self):
+        pass

@@ -21,6 +21,8 @@ class DominionMap(BaseMap):
         if self.needs_update:
             self.update_edges()
             self.state.map.map_image.render_map()
+            # if dominion is updated in anyway, we need to refresh all defense zones
+            self.state.map.guard_map.refresh_guard_zones()
 
     def base_value(self, x, y):
         return None

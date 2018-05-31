@@ -42,7 +42,7 @@ class ConquerAction(MilitaryAction):
             self.activate_effect(point)
             print 'attacker wins'
             # if defender is garrison, apply correct building conquer interaction
-            if defender.is_garrison():
+            if defender.is_garrison() and not defender.sallying:
                 defender.rout()
                 self.conquer_building(defender)
             else:
@@ -54,7 +54,6 @@ class ConquerAction(MilitaryAction):
 
         building = garrison.building
         point = building.coord.int_position
-        print building
 
         if building.obj_code in {TOWER, PALACE}:
             building.raze()
@@ -69,7 +68,7 @@ class ConquerAction(MilitaryAction):
 
         elif building.obj_code == ZIGGURAT:
             if in_player_domain(self.state, point) and not building.under_construction and\
-                    self.player.can_add_ziggurate():
+                    self.player.can_add_ziggurat():
                 building.capture(self.player)
                 self.selected_army.form_garrison(building)
             else:
