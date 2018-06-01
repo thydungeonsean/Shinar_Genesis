@@ -18,7 +18,7 @@ class Player(object):
 
     def __init__(self, player_name, color, ai=False):
 
-        self.player_name = player_name
+        self.name = player_name
         self.player_id = Player.assign_player_id()
         self.color = color
         if ai:
@@ -37,7 +37,7 @@ class Player(object):
             return HumanController(self)
 
     def activate_controller(self):
-        print self.player_name + ' activated'
+        print self.name + ' activated'
         self.controller.activate()
 
     def deactivate_controller(self):

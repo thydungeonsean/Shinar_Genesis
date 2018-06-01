@@ -11,6 +11,7 @@ class TurnController(object):
 
         self.state = state
         self.player_manager = self.state.player_manager
+        self.turn_event_runner = self.state.turn_event_runner
 
         self.turn_state = TurnController.NEED_START
 
@@ -65,6 +66,9 @@ class TurnController(object):
         # deactivate player controller
         self.active_player.deactivate_controller()
         self.state.action_controller.reset()
+
+        # run end of turn sequence
+        self.turn_event_runner.run()
 
         # cycle active player
         self.player_manager.cycle_to_next_player()

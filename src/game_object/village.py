@@ -58,3 +58,6 @@ class Village(PlayerGameObject):
 
     def load_image(self, id):
         pass
+
+    def is_neutral(self):
+        return self.owner_id == NeutralPlayer.get_instance().player_id

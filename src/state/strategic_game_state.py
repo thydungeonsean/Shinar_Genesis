@@ -12,6 +12,8 @@ from components.map_highlighter import MapHighlighter
 
 from src.player.player import Player
 from components.player_manager import PlayerManager
+from components.turn_event_runner import TurnEventRunner
+from components.flood_timer import FloodTimer
 
 
 class StrategicGameState(BaseState):
@@ -28,8 +30,10 @@ class StrategicGameState(BaseState):
         self.player_manager = PlayerManager(self, Player('Player 1', (200, 0, 0)),
                                             Player('Player 2', (0, 0, 200)),)
                                             # Player('Player 3', (0, 220, 160)))
+        self.turn_event_runner = TurnEventRunner(self)
         self.turn_controller = TurnController(self)
         self.map_highlighter = MapHighlighter(self)
+        self.flood_timer = FloodTimer()
 
         self.frame_counter = FrameCounter(120)
 

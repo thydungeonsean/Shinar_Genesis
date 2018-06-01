@@ -21,7 +21,6 @@ class RaidAction(MilitaryAction):
         raided = get_raided_points(self.state, point)
         # raid points
         map(self.raid_point, raided)
-        # end action
 
     def raid_point(self, point):
         # remove farm at point

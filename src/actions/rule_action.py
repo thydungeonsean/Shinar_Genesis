@@ -27,8 +27,9 @@ class RuleAction(Action):
                 new_domain = self.get_new_domain_points(new_edge)
                 map(lambda x: self.extend_rule(x), new_domain)
 
-                # end action
             self.state.map.map_image.render_map()
+            # end action
+            self.complete_action()
 
     def get_player_domain(self):
 

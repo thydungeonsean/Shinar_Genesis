@@ -25,6 +25,9 @@ class PlantAction(Action):
 
             map(lambda x: self.plant(x), planting)
 
+            # end point
+            self.complete_action()
+
     def plant(self, point):
 
         self.state.map.farm_map.add_farm(point)

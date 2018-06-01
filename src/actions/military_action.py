@@ -82,6 +82,8 @@ class MilitaryAction(Action):
         # add army to point
         army = self.get_army(point)
         self.state.map.game_object_map.add_game_object(army)
+        # end point
+        self.complete_action()
 
     def get_army(self, point):
         return Army(self.state, point, self.player)
@@ -129,7 +131,8 @@ class MilitaryAction(Action):
             # trigger action effect
             self.activate_effect(point)
 
-        # end action
+            # end point
+            self.complete_action()
 
     def activate_effect(self, point):
         pass
@@ -155,6 +158,7 @@ class MilitaryAction(Action):
             self.selected_army.rout()
             # if defender intercepted, move them to this point
             # end action
+            self.complete_action()
 
         return win_effect, lose_effect
 
@@ -165,6 +169,7 @@ class MilitaryAction(Action):
             print 'attacker wins'
             defender.rout()
             # end action
+            self.complete_action()
 
         return win_effect
 

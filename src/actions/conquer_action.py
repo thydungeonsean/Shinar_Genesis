@@ -48,6 +48,9 @@ class ConquerAction(MilitaryAction):
             else:
                 defender.rout()
 
+            # end point
+            self.complete_action()
+
         return win_effect
 
     def conquer_building(self, garrison):

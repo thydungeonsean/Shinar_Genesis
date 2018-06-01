@@ -82,13 +82,15 @@ class BuildAction(Action):
             if self.selected_building in {ZIGGURAT, PALACE}:
                 self.player.active_construction = building
 
-            # TODO end action
+            # end action
+            self.complete_action()
 
     # advance construction on players current project
     def construct_action(self):
 
         self.player.advance_construction()
-        # TODO end action
+        # end action
+        self.complete_action()
 
     # end tower build action
     def build_tower(self, point):
@@ -100,6 +102,5 @@ class BuildAction(Action):
         ui = UIController(self.state)
         ui.close_military_upgrade_panel()
 
-        # TODO end action
-
-
+        # end action
+        self.complete_action()

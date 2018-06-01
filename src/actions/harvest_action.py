@@ -23,6 +23,7 @@ class HarvestAction(Action):
             map(self.harvest, connected_farms)
 
             # end of action wrap up
+            self.complete_action()
 
     def harvest(self, point):
         self.state.map.farm_map.remove_farm(point)

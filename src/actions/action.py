@@ -1,4 +1,5 @@
 from src.enum.actions import *
+from src.constants import DEV_MODE_ACTION_COMPLETION
 
 
 class Action(object):
@@ -37,3 +38,9 @@ class Action(object):
 
     def null_action(self, point):
         pass
+
+    def complete_action(self):
+
+        if not DEV_MODE_ACTION_COMPLETION:
+
+            self.state.turn_controller.pass_turn()

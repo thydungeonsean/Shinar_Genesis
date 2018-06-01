@@ -16,7 +16,7 @@ class PlayerBanner(Element):
 
         cls = PlayerBanner
         Element.__init__(self, ui, cls.w, cls.h, (cls.x, cls.y), 'screen', 'player_banner')
-        self.text = player.player_name
+        self.text = player.name
         self.color = player.color
         self.initialize()
 
