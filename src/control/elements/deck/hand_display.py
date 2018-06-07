@@ -1,8 +1,8 @@
-from element import Element
+from ..element import Element
 from src.constants import *
 
 
-class ActionPanel(Element):
+class HandDisplay(Element):
 
     n = 4
     buffer = 10
@@ -16,5 +16,5 @@ class ActionPanel(Element):
 
     def __init__(self, ui):
 
-        cls = ActionPanel
-        Element.__init__(self, ui, cls.w, cls.h, cls.coord, el_id='action_panel')
+        cls = HandDisplay
+        Element.__init__(self, ui, cls.w, cls.h, cls.coord, el_id='hand_display')

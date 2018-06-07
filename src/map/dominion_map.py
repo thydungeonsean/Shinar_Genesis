@@ -1,5 +1,7 @@
 from base_map import BaseMap
 from src.image.border_edge_tile_map import BorderEdgeTileMap
+from src.enum.object_codes import PALACE
+from src.data_structures.flood_fill import flood
 
 
 class DominionMap(BaseMap):
@@ -19,6 +21,9 @@ class DominionMap(BaseMap):
     def run(self):
 
         if self.needs_update:
+
+            self.sanitize_dominion()
+
             self.update_edges()
             self.state.map.map_image.render_map()
             # if dominion is updated in anyway, we need to refresh all defense zones
@@ -95,3 +100,42 @@ class DominionMap(BaseMap):
         if not self.in_bounds(point):
             return False
         return point not in player_dominion
+
+    def sanitize_dominion(self):
+
+        for player_id in self.state.player_manager.get_player_ids():
+
+            self.sanitize_player_domain(player_id)
+
+    def sanitize_player_domain(self, player_id):
+
+        # get all palaces coords
+        palaces = self.state.map.game_object_map.get_objects_with_code(PALACE)
+        palaces = filter(lambda x: x.owner_id == player_id, palaces)
+        palace_coords = [p.coord.int_position for p in palaces]
+
+        # flood players domain from those coords
+
+        edge = palace_coords
+        touched = set(palace_coords)
+        while edge:
+            edge = flood(edge, lambda x: self.valid_domain(player_id, x), touched)
+            touched.update(edge)
+        palace_domain = touched
+
+        # get all their domain
+        total_domain = set(self.state.map.dominion_map.get_all(player_id))
+
+        stranded = total_domain.difference(palace_domain)
+        if stranded:
+            map(self.strand, stranded)
+
+    def valid_domain(self, player_id, point):
+
+        domain = self.state.map.dominion_map
+        if not domain.in_bounds(point):
+            return False
+        return domain.get_tile(point) == player_id
+
+    def strand(self, point):
+        self.set_tile(point, None)

@@ -1,7 +1,8 @@
 from elements.player_banner import PlayerBanner
 from elements.pass_button import PassButton
-from elements.action_button import ActionButton
-from elements.action_panel import ActionPanel
+# hand
+from elements.deck.hand_display import HandDisplay
+from elements.deck.card_display import CardDisplay
 
 from elements.action_choice_panel import ActionChoicePanel
 from elements.build_choice_panel import BuildChoicePanel
@@ -29,24 +30,47 @@ class UIController(object):
         button = PassButton(self.ui)
         self.ui.add_element(button)
 
-    def add_action_panel(self):
+    # def clear_action_button(self, action_id):
+    #     action_button = self.ui.get_element(action_names[action_id])
+    #     action_button.remove_named_component('highlight')
+    #
+    # def highlight_action_button(self, action_id):
+    #
+    #     action_button = self.ui.get_element(action_names[action_id])
+    #     highlight = HighlightComponent(action_button)
+    #     action_button.add_named_component(highlight, 'highlight')
 
-        panel = ActionPanel(self.ui)
+    def highlight_card(self, action_id, hand_pos):
+        card = self.ui.get_element(self.get_action_card_element_id(action_id, hand_pos))
+        highlight = HighlightComponent(card)
+        card.add_named_component(highlight, 'highlight')
+
+    def clear_card_highlight(self, action_id, hand_pos):
+        card = self.ui.get_element(self.get_action_card_element_id(action_id, hand_pos))
+        card.remove_named_component('highlight')
+
+    @staticmethod
+    def get_action_card_element_id(action_id, hand_pos):
+        action = action_names[action_id]
+        hand_pos = str(hand_pos)
+        return '-'.join((action, hand_pos))
+
+    #############################################################################
+    # HAND DISPLAY
+    #################
+    def add_hand_display(self):
+
+        panel = HandDisplay(self.ui)
         self.ui.add_element(panel)
 
-        for i in range(len(test_actions)):
-            b = ActionButton(self.ui, test_actions[i], i)
+        hand = self.state.player_manager.active_player.get_hand()
+
+        for i in range(len(hand)):
+            b = CardDisplay(self.ui, hand[i], i)
             self.ui.add_element(b)
 
-    def clear_action_button(self, action_id):
-        action_button = self.ui.get_element(action_names[action_id])
-        action_button.remove_named_component('highlight')
-
-    def highlight_action_button(self, action_id):
-
-        action_button = self.ui.get_element(action_names[action_id])
-        highlight = HighlightComponent(action_button)
-        action_button.add_named_component(highlight, 'highlight')
+    def close_hand_display(self):
+        self.ui.remove_element_by_key('hand_display')
 
     # military actions
     def open_action_choice_panels(self, action):

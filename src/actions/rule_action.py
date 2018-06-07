@@ -21,9 +21,9 @@ class RuleAction(Action):
         if point in self.valid_points:
 
             for i in range(2):
-                player_domain = self.get_player_domain()
-                edge = get_edge(player_domain)
-                new_edge = get_rule_edge(self.state, edge, player_domain)
+                palace_domain = self.get_palace_domain(point)
+                edge = get_edge(palace_domain)
+                new_edge = get_rule_edge(self.state, edge, palace_domain)
                 new_domain = self.get_new_domain_points(new_edge)
                 map(lambda x: self.extend_rule(x), new_domain)
 
@@ -31,9 +31,25 @@ class RuleAction(Action):
             # end action
             self.complete_action()
 
-    def get_player_domain(self):
+    def get_palace_domain(self, palace):
 
-        return set(self.state.map.dominion_map.get_all(self.player.player_id))
+        edge = [palace]
+        touched = set()
+
+        while edge:
+            edge = flood(edge, self.valid_domain, touched)
+            touched.update(edge)
+
+        return touched
+
+    def valid_domain(self, point):
+
+        dom = self.state.map.dominion_map
+
+        if not dom.in_bounds(point):
+            return False
+
+        return dom.get_tile(point) == self.player.player_id
 
     def extend_rule(self, point):
         self.state.map.dominion_map.add_dominion(self.player.player_id, point)
@@ -48,6 +64,9 @@ class RuleAction(Action):
             chance = base_chance
 
             if self.state.map.dominion_map.get_tile(point) is not None:
+
+                # TODO if guarded, can't expand here
+
                 chance -= 25
 
             terrain = self.state.map.tile_map.get_tile(point)

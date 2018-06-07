@@ -3,6 +3,7 @@ from base_state import BaseState
 from src.control.template.strategic_ui import load_strategic_ui
 from src.control.template.strategic_input_handler import load_strategic_input_handler
 from src.actions.action_controller import ActionController
+from src.actions.hand_controller import HandController
 from src.map.strategic_map import StrategicMap
 
 from components.display import Display
@@ -22,6 +23,7 @@ class StrategicGameState(BaseState):
 
         BaseState.__init__(self, state_manager)
         self.action_controller = ActionController(self)
+        self.hand_controller = HandController(self)
         self.ui = load_strategic_ui(self)
         self.input_handler = load_strategic_input_handler(self)
         self.screen = None

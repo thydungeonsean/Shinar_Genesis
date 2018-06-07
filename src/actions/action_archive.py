@@ -11,8 +11,6 @@ from build_aciton import BuildAction
 actions = {
     PLANT_ACTION: PlantAction,
     HARVEST_ACTION: HarvestAction,
-    RAISE_ACTION: PlantAction,
-    MOVE_ACTION: PlantAction,
     RULE_ACTION: RuleAction,
     RAID_ACTION: RaidAction,
     DEFEND_ACTION: DefendAction,

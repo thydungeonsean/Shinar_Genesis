@@ -35,13 +35,17 @@ class TurnController(object):
 
     def start_turn(self):
 
+        # draw players hand
+        self.active_player.draw_hand()
+        print self.active_player.get_hand()
+
         # set up active player's displays
         # banner
         ui = UIController(self.state)
         ui.add_player_banner(self.active_player)
 
-        # options
-        ui.add_action_panel()
+        # display player hand
+        ui.add_hand_display()
 
         # pass button
         ui.add_pass_button()
@@ -57,20 +61,28 @@ class TurnController(object):
 
     def end_turn(self):
 
+        ui_control = UIController(self.state)
+        ui_control.close_hand_display()
+
         # tear down active player's display
         ui = self.state.ui
         ui.remove_element_by_key('player_banner')
-
         ui.remove_element_by_key('pass_button')
 
         # deactivate player controller
         self.active_player.deactivate_controller()
         self.state.action_controller.reset()
+        self.state.hand_controller.reset()
 
         # run end of turn sequence
         self.turn_event_runner.run()
+
+        # discard cards left in player's hand
+        self.active_player.discard_hand()
 
         # cycle active player
         self.player_manager.cycle_to_next_player()
 
         self.turn_state = TurnController.NEED_START
+
+        self.state.screen.fill((0, 0, 0))

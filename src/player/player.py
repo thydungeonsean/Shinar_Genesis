@@ -1,6 +1,7 @@
 from ai_controller import AIController
 from human_controller import HumanController
 from random import randint
+from deck.player_deck import PlayerDeck
 
 
 class Player(object):
@@ -30,6 +31,8 @@ class Player(object):
 
         self.active_construction = None
 
+        self.deck = PlayerDeck.default_deck()
+
     def load_controller(self):
         if self.controller_id == Player.AI:
             return AIController(self)
@@ -52,3 +55,13 @@ class Player(object):
     def can_add_ziggurat(self):
         # has < 3 ziggurats
         return True
+
+    # deck handle
+    def get_hand(self):
+        return self.deck.get_hand()
+
+    def draw_hand(self):
+        self.deck.draw_hand()
+
+    def discard_hand(self):
+        self.deck.discard_hand()

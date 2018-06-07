@@ -2,9 +2,7 @@
 
 PLANT_ACTION = 0
 HARVEST_ACTION = 1
-MOVE_ACTION = 2
-RAISE_ACTION = 3
-BATTLE_ACTION = 4
+
 RULE_ACTION = 5
 RAID_ACTION = 6
 CONQUER_ACTION = 7
@@ -15,9 +13,7 @@ BUILD_ACTION = 9
 action_names = {
     PLANT_ACTION: "Plant",
     HARVEST_ACTION: "Harvest",
-    RAISE_ACTION: "Raise",
-    MOVE_ACTION: "Move",
-    BATTLE_ACTION: "Battle",
+
     RULE_ACTION: "Rule",
     RAID_ACTION: "Raid",
     CONQUER_ACTION: "Conquer",

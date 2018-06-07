@@ -1,6 +1,4 @@
 from src.enum.actions import *
-from src.control.ui_controller import UIController
-
 from action_archive import load_action
 
 
@@ -21,39 +19,14 @@ class ActionController(object):
     def init_action_table(self):
 
         table = {}
-        for action_id in test_actions:
+        for action_id in action_names.keys():
             table[action_id] = False
 
         return table
 
-    def button_clicked(self, action_id):
-
-        print action_names[action_id]
-
-        if self.action_table[action_id]:
-            self.deselect_action(action_id)
-        else:
-            self.clear_actions()
-            self.select_action(action_id)
-
-    def deselect_action(self, action_id):
-
-        self.action_table[action_id] = False
-        # clear highlight on button etc.
-        ui = UIController(self.state)
-        ui.clear_action_button(action_id)
-
-        self.action.deinitialize_action()
-        self.action = None
-        self.state.map_highlighter.clear_highlight()
-
     def select_action(self, action_id):
 
         self.action_table[action_id] = True
-
-        # highlight button etc.
-        ui = UIController(self.state)
-        ui.highlight_action_button(action_id)
 
         # set as active action
         self.load_action(action_id)
@@ -61,18 +34,29 @@ class ActionController(object):
         # highlight valid_tiles
         self.highlight_tiles()
 
-    def clear_actions(self):
+    def deselect_action(self, action_id):
 
-        for action_id in test_actions:
-            if self.action_table[action_id]:
-                self.deselect_action(action_id)
+        if self.action_table[action_id]:
+            self.action_table[action_id] = False
 
-    def reset(self):
-        self.clear_actions()
+            self.action.deinitialize_action()
+            self.action = None
+            self.clear_tile_highlights()
 
     def load_action(self, action_id):
 
         self.action = load_action(action_id, self.state)
 
     def highlight_tiles(self):
+
         self.state.map_highlighter.highlight(self.action)
+
+    def clear_tile_highlights(self):
+        self.state.map_highlighter.clear_highlight()
+
+    def reset(self):
+        # called at end of turn process
+
+        for action_id in action_names.keys():
+            if self.action_table[action_id]:
+                self.deselect_action(action_id)
